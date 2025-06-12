@@ -11,4 +11,5 @@ public interface QuizzService {
 	public ResponseEntity<String> createQuizz(String category, int numQ, String title);
 	public ResponseEntity<List<QuizzWrapper>> getQuizz(int id);
 	public ResponseEntity<Integer> calculateResult(Integer id, List<Response> response);
+	public ResponseEntity<List<QuizzWrapper>> getAllQuizzes();
 }

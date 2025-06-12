@@ -36,6 +36,11 @@ public class QuizzController {
 		return qService.getQuizz(id);
 	}
 	
+	@GetMapping("getQuizzes")
+	public ResponseEntity<List<QuizzWrapper>> getAllQuizzes(){
+		return qService.getAllQuizzes();
+	}
+	
 	@PostMapping("submit/{id}")
 	public ResponseEntity<Integer> getResult(@PathVariable Integer id, @RequestBody List<Response> response){
 		return qService.calculateResult(id, response);

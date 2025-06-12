@@ -1,5 +1,6 @@
 package com.QuizzApp.services;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -47,8 +48,10 @@ public class QuizzServiceImpl implements QuizzService {
 			List<Questions> questionsFormDB = quiz.get().getQuestions();
 			List<QuizzWrapper> questionsForUser = new ArrayList<>();
 			
+			int i=0;
 			for(Questions q : questionsFormDB) {
-				QuizzWrapper qw = new QuizzWrapper(q.getQuestion_id(), q.getQuestionTitle(), q.getOption1(), q.getOption2(), q.getOption3(), q.getOption4());
+				QuizzWrapper qw = new QuizzWrapper(q.getQuestion_id(), q.getQuestionTitle(), questionsFormDB.get(i).getCategory(), LocalDate.now(), q.getOption1(), q.getOption2(), q.getOption3(), q.getOption4());
+				i++;
 				questionsForUser.add(qw);
 			}
 			
@@ -84,7 +87,26 @@ public class QuizzServiceImpl implements QuizzService {
 	        }
 	    }
 
-	    return new ResponseEntity<>(correctCount+1, HttpStatus.OK);
+	    return new ResponseEntity<>(correctCount, HttpStatus.OK);
+	}
+
+	@Override
+	public ResponseEntity<List<QuizzWrapper>> getAllQuizzes() {
+		List<Quizz> list = quizzRepo.findAll();
+		
+		List<Questions> que = questionRepo.findAll();
+		
+		List<QuizzWrapper> qlist = new ArrayList<>();
+		if(list != null) {
+			int i=0;
+			for(Quizz q : list) {
+				QuizzWrapper qw = new QuizzWrapper(q.getQuizz_id(), q.getTitle(), que.get(i).getCategory(), LocalDate.now(), que.get(i).getOption1(), que.get(i).getOption2(), que.get(i).getOption3(), que.get(i).getOption4());
+				i++;
+				qlist.add(qw);
+			}
+			return new ResponseEntity<List<QuizzWrapper>>(qlist, HttpStatus.OK);
+		}
+		return new ResponseEntity("No Quizzes Available...", HttpStatus.OK);
 	}
 
 
