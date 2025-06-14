@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
 
 const AddQuestion = () => {
     const navigate = useNavigate();
@@ -27,8 +28,8 @@ const AddQuestion = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setError('');
 
-        // Optional: Simple validation
         const {
             questionTitle, option1, option2, option3, option4,
             rightAnswer, difficultyLevel, category
@@ -53,52 +54,62 @@ const AddQuestion = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gray-100 px-4 py-10">
-            <div className="max-w-3xl mx-auto bg-white shadow-lg rounded-xl p-8">
-                <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">Add New Question</h2>
+        <motion.div
+            className="min-h-screen bg-gray-100 px-4 py-10 flex items-center justify-center"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.4 }}
+        >
+            <motion.div
+                className="max-w-3xl w-full bg-white shadow-lg rounded-xl p-8"
+                initial={{ y: 50, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ duration: 0.6 }}
+            >
+                <motion.h2
+                    className="text-2xl font-bold text-center text-gray-800 mb-6"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.2 }}
+                >
+                    Add New Question
+                </motion.h2>
 
                 {error && <p className="text-red-600 text-center mb-4">{error}</p>}
 
                 <form onSubmit={handleSubmit} className="space-y-4">
-                    <div>
-                        <label className="block mb-1 font-medium">Question Title</label>
-                        <input
-                            type="text"
-                            name="questionTitle"
-                            value={formData.questionTitle}
-                            onChange={handleChange}
-                            className="w-full px-4 py-2 border border-gray-300 rounded-md"
-                            placeholder="Enter question title"
-                        />
-                    </div>
-
-                    {['option1', 'option2', 'option3', 'option4'].map((opt, i) => (
-                        <div key={opt}>
-                            <label className="block mb-1 font-medium">Option {i + 1}</label>
+                    {[
+                        { label: 'Question Title', name: 'questionTitle', placeholder: 'Enter question title' },
+                        { label: 'Option 1', name: 'option1', placeholder: 'Enter option 1' },
+                        { label: 'Option 2', name: 'option2', placeholder: 'Enter option 2' },
+                        { label: 'Option 3', name: 'option3', placeholder: 'Enter option 3' },
+                        { label: 'Option 4', name: 'option4', placeholder: 'Enter option 4' },
+                        { label: 'Right Answer', name: 'rightAnswer', placeholder: 'Enter correct answer' },
+                        { label: 'Category', name: 'category', placeholder: 'e.g., Java, Python, etc.' }
+                    ].map((field, i) => (
+                        <motion.div
+                            key={field.name}
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.2 + i * 0.1 }}
+                        >
+                            <label className="block mb-1 font-medium">{field.label}</label>
                             <input
                                 type="text"
-                                name={opt}
-                                value={formData[opt]}
+                                name={field.name}
+                                value={formData[field.name]}
                                 onChange={handleChange}
                                 className="w-full px-4 py-2 border border-gray-300 rounded-md"
-                                placeholder={`Enter option ${i + 1}`}
+                                placeholder={field.placeholder}
                             />
-                        </div>
+                        </motion.div>
                     ))}
 
-                    <div>
-                        <label className="block mb-1 font-medium">Right Answer</label>
-                        <input
-                            type="text"
-                            name="rightAnswer"
-                            value={formData.rightAnswer}
-                            onChange={handleChange}
-                            className="w-full px-4 py-2 border border-gray-300 rounded-md"
-                            placeholder="Enter correct answer"
-                        />
-                    </div>
-
-                    <div>
+                    <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.9 }}
+                    >
                         <label className="block mb-1 font-medium">Difficulty Level</label>
                         <select
                             name="difficultyLevel"
@@ -111,31 +122,26 @@ const AddQuestion = () => {
                             <option value="Medium">Medium</option>
                             <option value="Hard">Hard</option>
                         </select>
-                    </div>
+                    </motion.div>
 
-                    <div>
-                        <label className="block mb-1 font-medium">Category</label>
-                        <input
-                            type="text"
-                            name="category"
-                            value={formData.category}
-                            onChange={handleChange}
-                            className="w-full px-4 py-2 border border-gray-300 rounded-md"
-                            placeholder="e.g., Java, Python, any Category.."
-                        />
-                    </div>
-
-                    <div className="text-center">
-                        <button
+                    <motion.div
+                        className="text-center"
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 1.1 }}
+                    >
+                        <motion.button
                             type="submit"
-                            className="mt-4 px-6 py-2 bg-blue-600 hover:bg-blue-700 cursor-pointer text-white rounded-md"
+                            whileTap={{ scale: 0.96 }}
+                            transition={{ type: 'spring', stiffness: 300 }}
+                            className="mt-4 px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md"
                         >
                             Add Question
-                        </button>
-                    </div>
+                        </motion.button>
+                    </motion.div>
                 </form>
-            </div>
-        </div>
+            </motion.div>
+        </motion.div>
     );
 };
 

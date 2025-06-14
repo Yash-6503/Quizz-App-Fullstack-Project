@@ -12,6 +12,7 @@ import NotFound from './pages/NotFound';
 import AddQuestion from './components/add/AddQuestion';
 import AddUser from './components/add/AddUser';
 import AddQuizz from './components/add/AddQuizz';
+import Quizz from './components/view/Quizz';
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
               <Route path="/dashboard" element={<Dashboard/>} />
               <Route path="/quizzes" element={<Quizzes />} />
               <Route path="/quizz/add" element={<AddQuizz />} />
+        <Route path="/quizz/:id" element={<Quizz />} />
               <Route path="/questions" element={<Questions />} />
               <Route path="/question/add" element={<AddQuestion />} />
               <Route path="/users" element={<Users />} />

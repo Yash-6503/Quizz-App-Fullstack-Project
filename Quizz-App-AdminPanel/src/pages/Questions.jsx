@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
 
 const Questions = () => {
   const [questions, setQuestions] = useState([]);
@@ -10,7 +11,6 @@ const Questions = () => {
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  // Fetch all questions on mount
   useEffect(() => {
     fetchAllQuestions();
   }, []);
@@ -62,7 +62,6 @@ const Questions = () => {
       await axios.delete(`http://localhost:8080/admin/delete/question/${id}`);
       alert('Question deleted successfully');
 
-      // Refresh based on filter
       if (selectedCategory) {
         const res = await axios.get(`http://localhost:8080/admin/category/${selectedCategory}`);
         setQuestions(res.data);
@@ -80,15 +79,36 @@ const Questions = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 px-4 py-8">
-      <div className="max-w-6xl mx-auto bg-white shadow-md rounded-lg p-6">
-        <h2 className="text-2xl font-semibold text-center text-gray-800 mb-6">All Questions</h2>
+    <motion.div
+      className="min-h-screen bg-gray-100 px-4 py-8"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+    >
+      <motion.div
+        className="max-w-6xl mx-auto bg-white shadow-md rounded-lg p-6"
+        initial={{ y: 20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.6 }}
+      >
+        <motion.h2
+          className="text-2xl font-semibold text-center text-gray-800 mb-6"
+          initial={{ scale: 0.95, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ duration: 0.4 }}
+        >
+          All Questions
+        </motion.h2>
 
-        {/* Filter and Add */}
-        <div className="mb-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <motion.div
+          className="mb-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+        >
           <Link
             to="/question/add"
-            className="bg-green-600 hover:bg-green-700 cursor-pointer px-4 py-2 font-medium rounded text-white text-md w-full md:w-auto text-center"
+            className="bg-green-600 hover:bg-green-700 cursor-pointer px-4 py-2 font-medium rounded text-white text-md w-full md:w-auto text-center transition"
           >
             Add Question
           </Link>
@@ -105,10 +125,8 @@ const Questions = () => {
               </option>
             ))}
           </select>
-        </div>
+        </motion.div>
 
-
-        {/* Question List */}
         {loading ? (
           <p className="text-center text-gray-600">Loading...</p>
         ) : error ? (
@@ -116,11 +134,27 @@ const Questions = () => {
         ) : questions.length === 0 ? (
           <p className="text-center text-gray-600">No questions found.</p>
         ) : (
-          <div className="space-y-6">
+                <motion.div
+                  className="grid grid-cols-1 sm:grid-cols-2 gap-6"
+                  initial="hidden"
+                  animate="visible"
+                  variants={{
+                    visible: {
+                      transition: {
+                        staggerChildren: 0.1,
+                      },
+                    },
+                  }}
+                >
             {questions.map((q) => (
-              <div
+              <motion.div
                 key={q.question_id || q.id}
-                className="border border-gray-300 p-4 rounded-md shadow-sm bg-gray-50"
+                className="border border-gray-300 p-4 rounded-md shadow-sm bg-gray-50 hover:shadow-md transition-shadow"
+                whileHover={{ scale: 1.02 }}
+                variants={{
+                  hidden: { opacity: 0, y: 10 },
+                  visible: { opacity: 1, y: 0 },
+                }}
               >
                 <div className="mb-2 text-lg font-medium text-gray-800">{q.questionTitle}</div>
                 <ul className="list-disc pl-6 text-gray-700 mb-2">
@@ -137,23 +171,23 @@ const Questions = () => {
                 <div className="flex space-x-4">
                   <button
                     onClick={() => handleUpdate(q.question_id || q.id)}
-                    className="bg-blue-500 hover:bg-blue-600 cursor-pointer text-white px-4 py-1 rounded-md text-sm"
+                    className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-1 rounded-md text-sm"
                   >
                     Update
                   </button>
                   <button
                     onClick={() => handleDelete(q.question_id || q.id)}
-                    className="bg-red-500 hover:bg-red-600 cursor-pointer text-white px-4 py-1 rounded-md text-sm"
+                    className="bg-red-500 hover:bg-red-600 text-white px-4 py-1 rounded-md text-sm"
                   >
                     Delete
                   </button>
                 </div>
-              </div>
+              </motion.div>
             ))}
-          </div>
+                </motion.div>
         )}
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 };
 

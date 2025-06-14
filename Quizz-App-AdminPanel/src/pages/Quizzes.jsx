@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
 import { Eye } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 const Quizzes = () => {
   const [quizzes, setQuizzes] = useState([]);
@@ -30,8 +31,8 @@ const Quizzes = () => {
     if (!confirmDelete) return;
 
     try {
-      await axios.delete(`http://localhost:8080/admin/delete/quiz/${id}`);
-      setQuizzes(prev => prev.filter(quiz => quiz.quizzId !== id));
+      await axios.delete(`http://localhost:8080/admin/delete/quizz/${id}`);
+      setQuizzes(prev => prev.filter(quiz => quiz.quizz_id !== id));
       alert('Quiz deleted successfully');
     } catch (err) {
       console.error(err);
@@ -48,13 +49,23 @@ const Quizzes = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 px-4 py-10">
-      <div className="max-w-6xl mx-auto bg-white p-6 shadow-md rounded-lg">
+    <motion.div
+      className="min-h-screen bg-gray-100 px-4 py-10"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.6 }}
+    >
+      <motion.div
+        className="max-w-6xl mx-auto bg-white p-6 shadow-md rounded-lg"
+        initial={{ y: 20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.6, delay: 0.2 }}
+      >
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-2xl font-bold text-gray-800">All Quizzes</h2>
           <Link
             to="/quizz/add"
-            className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md"
+            className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md transition duration-300"
           >
             Add Quiz
           </Link>
@@ -68,10 +79,14 @@ const Quizzes = () => {
           <p className="text-center text-gray-600">No quizzes found.</p>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-            {quizzes.map((quiz) => (
-              <div
-                key={quiz.quizzId}
-                className="border border-gray-300 p-4 rounded-md bg-gray-50 shadow-sm"
+                  {quizzes.map((quiz, index) => (
+                    <motion.div
+                      key={quiz.quizz_id}
+                      className="border border-gray-300 p-4 rounded-md bg-gray-50 shadow-sm hover:shadow-lg transition-shadow duration-300"
+                      whileHover={{ scale: 1.03 }}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.4, delay: index * 0.1 }}
               >
                 <h3 className="text-lg font-semibold text-gray-800 mb-1">{quiz.title}</h3>
                 <p className="text-sm text-gray-600 mb-2">
@@ -85,30 +100,30 @@ const Quizzes = () => {
                 </p>
                 <div className="flex space-x-3 mt-4">
                   <button
-                    onClick={() => handleView(quiz.quizzId)}
-                    className="bg-yellow-500 hover:bg-yellow-600 cursor-pointer text-white px-4 py-1 rounded-md text-sm"
+                          onClick={() => handleView(quiz.quizz_id)}
+                          className="bg-yellow-500 hover:bg-yellow-600 cursor-pointer text-white px-4 py-1 rounded-md text-sm flex items-center justify-center"
                   >
                     <Eye size={16} />
                   </button>
                   <button
-                    onClick={() => handleUpdate(quiz.quizzId)}
+                          onClick={() => handleUpdate(quiz.quizz_id)}
                     className="bg-blue-500 hover:bg-blue-600 cursor-pointer text-white px-4 py-1 rounded-md text-sm"
                   >
                     Update
                   </button>
                   <button
-                    onClick={() => handleDelete(quiz.quizzId)}
+                          onClick={() => handleDelete(quiz.quizz_id)}
                     className="bg-red-500 hover:bg-red-600 cursor-pointer text-white px-4 py-1 rounded-md text-sm"
                   >
                     Delete
                   </button>
                 </div>
-              </div>
+                    </motion.div>
             ))}
           </div>
         )}
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 };
 
